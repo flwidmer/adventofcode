@@ -3,13 +3,12 @@ import Data.List
 main = do
   input <- readFile "input" 
   putStrLn "day5"
-  putStrLn . show . solve1 $ lines input
-  putStrLn . show . solve2 $ lines input
+  print . solve1 $ lines input
+  print . solve2 $ lines input
 
 -- input format
 -- BFFFBBFRRR
 -- B is back, F is front. binary encoding.
-
 
 -- find maximum seat number
 solve1 :: [String] -> Integer
@@ -27,7 +26,7 @@ solve2 a =
 -- calculate seatnumber according to rule 
 seatnum :: String -> Integer
 seatnum a = 
-  let (row, seat) = separate 7 a
+  let (row, seat) = splitAt 7 a
       x = bin $ map transBF row
       y = bin $ map transRL seat
   in x * 8 + y
@@ -35,11 +34,6 @@ seatnum a =
     transBF = translate 'B' 'F'
     transRL = translate 'R' 'L'
     
-
--- separate the input
-separate :: Int -> String -> (String, String)
-separate amount list = (take amount list, drop amount list)
-
 -- translate a given input to binary
 translate :: Char -> Char -> Char -> Integer
 translate one zero inp
@@ -52,4 +46,4 @@ bin :: [Integer] -> Integer
 bin a =
   let len = length a
       mult = reverse $ map (2^) [0..len-1]
-  in  sum $ map (\(a,b) -> a * b) $ zip mult a
+  in  sum $ zipWith (*) mult a

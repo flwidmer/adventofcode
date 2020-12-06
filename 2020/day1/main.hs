@@ -10,4 +10,8 @@ list = [1735,1700,1358,1908,1634,2006,762,1492,1917,1591,1571,1283,1744,1815,138
 
 compute3 x = [(a,b, c)| a<-x,b<-x, c<-x, a+b+c == 2020]
 
-main = do putStrLn "hello"
+main = do 
+    print $ prod . head $ compute2 list
+    print $ prod3 . head $ compute3 list
+
+

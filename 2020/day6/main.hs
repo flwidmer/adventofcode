@@ -25,3 +25,4 @@ addAll = sum . map length
 
 groups :: String -> [String]
 groups = splitOn "\n\n"
+

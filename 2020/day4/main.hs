@@ -9,8 +9,8 @@ import Text.Regex.Posix
 main = do
         input <- readFile "input"
         putStrLn "asd"
-        putStrLn $ show $ length $ filter id $ map passportCheck $ processedPassports input
-        putStrLn $ show $ length $ filter id $ map passportCheck2 $ processedPassports input
+        print length $ filter id $ map passportCheck $ processedPassports input
+        print length $ filter id $ map passportCheck2 $ processedPassports input
 
 processedPassports :: String -> [[(String, String)]]
 processedPassports input = map passportAllFields $ passports input
@@ -18,13 +18,13 @@ processedPassports input = map passportAllFields $ passports input
 -- split file into passports
 -- lines is no help here
 passports :: String -> [String]
-passports file = splitOn "\n\n" file
+passports = splitOn "\n\n"
 
 -- create a list of tuples representing each field of passport
 passportAllFields :: String -> [(String, String)]
 passportAllFields passport = 
   let fields = words passport 
-      fieldSplits = map (\f -> splitOn ":" f) fields 
+      fieldSplits = map (splitOn ":") fields 
       fieldTuples = map (\f -> (head f, f!!1)) fieldSplits
   in fieldTuples
 
@@ -32,12 +32,12 @@ passportAllFields passport =
 -- use fold to check "all true"
 passportCheck2 :: [(String, String)] -> Bool
 passportCheck2 passportTuples = 
-  (passportCheck passportTuples) && (foldl1 (&&) $ map valid passportTuples)
+  passportCheck passportTuples && foldl1 and $ map valid passportTuples
 
 passportCheck passportTuples = 
   let keys = map fst passportTuples
       needed = ["byr", "iyr","eyr","hgt","hcl","ecl","pid"]
-  in foldl1 (&&) $ map (\a -> elem a keys) needed
+  in foldl1 and $ map (`elem` keys) needed
 
 -- Validity using pattern matching
 -- parse number, check in between
@@ -49,10 +49,10 @@ valid ("eyr", v) = between 2020 2030 $ readMaybe v
 valid ("hgt", v) = 
   let formatCm = extractIntFromRegexResult $ getGroupByRegex "^(1[0-9]{2})cm$" v
       formatIn = extractIntFromRegexResult $ getGroupByRegex "^([5-7][0-9])in$" v
-  in (between 150 193 formatCm) || (between 59 76 formatIn)
+  in between 150 193 formatCm || between 59 76 formatIn
 -- match regex
 valid ("hcl", v) = v =~ "^#[a-f0-9]{6}$"
-valid ("ecl", v) = elem v ["amb", "blu", "brn", "gry", "grn", "hzl", "oth"]
+valid ("ecl", v) = v `elem` ["amb", "blu", "brn", "gry", "grn", "hzl", "oth"]
 valid ("pid", v) = v =~ "^[0-9]{9}$"
 -- always true, format not important
 valid ("cid", v) = True
