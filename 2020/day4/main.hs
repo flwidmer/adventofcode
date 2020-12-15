@@ -55,9 +55,9 @@ valid ("hcl", v) = v =~ "^#[a-f0-9]{6}$"
 valid ("ecl", v) = v `elem` ["amb", "blu", "brn", "gry", "grn", "hzl", "oth"]
 valid ("pid", v) = v =~ "^[0-9]{9}$"
 -- always true, format not important
-valid ("cid", v) = True
+valid ("cid", _) = True
 -- any other field is invalid
-valid (s, v) = False
+valid (_, _) = False
 
 -- helper function
 between lower upper value
