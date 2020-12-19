@@ -69,6 +69,7 @@ validateRule val (_, rules) = any (valid val) rules
     where valid a (l,u)  = a >= l && a <= u
 
 
+parseInput :: String -> ([(String, [(Int, Int)])], [Int], [[Int]])
 parseInput input =
     let [rules, mine, nearby] = splitOn "\n\n" input
     in (parseRules rules, head $ parseTick mine,parseTick nearby)
