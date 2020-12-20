@@ -5,7 +5,7 @@ import Data.Function (on)
 
 main = do
     input <- readFile "input"
-    print "day15"
+    print "day16"
     print $ solve1 input
     print $ solve2 input
 
