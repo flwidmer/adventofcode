@@ -11,12 +11,6 @@ main = do
     print $ length $ filter id $ solve input
     print $ length $ filter id $ solve input2
 
-onlyRegX input =
-    let (r:t:_) = separate input
-        allRules = parseRules r
-        ruleZero = snd $ head $ filter (\x -> fst x == 0) allRules --cheapo!
-    in buildRegex allRules ruleZero
-
 solve input =
     let (r:t:_) = separate input
         allRules = parseRules r
@@ -63,7 +57,7 @@ cheat :: String -> String -> Int -> String
 cheat left right n = "(" ++ concat (replicate n left) ++ concat (replicate n right) ++ ")"
 
 unwrap allRules num (Just rule)
-    | num == extr rule = "+"
+    | num == extr rule = "+" -- if the rule equals the rule that we are treating, it's the case of "8" in the example.  use a +
     | otherwise = buildRegex allRules rule
     where extr (Rule _ _ _ n) = n
 unwrap _ _ Nothing = ""
