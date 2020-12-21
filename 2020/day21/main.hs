@@ -2,13 +2,17 @@
 import Data.List.Split (splitOn)
 import Data.List (intercalate, sortBy, intersect, nub, (\\) )
 import Debug.Trace (trace)
-import qualified Control.Arrow as BF
+import qualified  Data.Bifunctor as BF
 import Data.Function (on)
 
 main = do
     input <- readFile "input"
     print "day 21"
     print $ solve1 input
+    print $ solve2 input
+
+dbg = False
+debug a b = if dbg then trace a b else b
 
 solve1 input =
     let safeIngredients = safe input
@@ -73,4 +77,3 @@ parseLine l =
         ingredients = words ing
     in map (\x -> (x,ingredients)) allergens
 
-debug = trace
