@@ -2,7 +2,7 @@ import Data.List.Split (splitOn)
 import Text.Regex.Posix
 import Debug.Trace
 
-import Data.List
+import Data.List ( intercalate )
 
 main = do
     print "day19"
