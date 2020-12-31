@@ -1,6 +1,6 @@
 
 import Debug.Trace (trace)
-import qual.ified Data.IntMap as M
+import qualified Data.IntMap as M
 main = do
     print "day 23"
     print $ solve1 puzzle
