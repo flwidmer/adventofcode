@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+
+  <groupId>org.spick</groupId>
+  <artifactId>aoc-2022</artifactId>
+  <version>1.0-SNAPSHOT</version>
+  <dependencies>
+    <dependency>
+      <groupId>org.junit.jupiter</groupId>
+      <artifactId>junit-jupiter</artifactId>
+      <version>RELEASE</version>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.assertj</groupId>
+      <artifactId>assertj-core</artifactId>
+      <version>3.24.2</version>
+      <scope>test</scope>
+    </dependency>
+  </dependencies>
+
+  <build>
+    <plugins>
+      <plugin>
+        <version>3.11.0</version>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-compiler-plugin</artifactId>
+        <configuration>
+          <enablePreview>true</enablePreview>
+          <source>21</source>
+          <target>21</target>
+          <compilerArgs>--enable-preview</compilerArgs>
+        </configuration>
+      </plugin>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-surefire-plugin</artifactId>
+        <configuration>
+          <argLine>
+            --enable-preview
+          </argLine>
+        </configuration>
+      </plugin>
+      <!--      <plugin>-->
+      <!--        <groupId>com.diffplug.spotless</groupId>-->
+      <!--        <artifactId>spotless-maven-plugin</artifactId>-->
+      <!--        <version>2.35.0</version>-->
+      <!--        <configuration>-->
+      <!--          <formats>-->
+      <!--            <format>-->
+      <!--              <includes>-->
+      <!--                <include>*.java</include>-->
+      <!--                <include>*.md</include>-->
+      <!--                <include>.gitignore</include>-->
+      <!--              </includes>-->
+      <!--              <trimTrailingWhitespace/>-->
+      <!--              <endWithNewline/>-->
+      <!--              <indent>-->
+      <!--                <tabs>true</tabs>-->
+      <!--                <spacesPerTab>4</spacesPerTab>-->
+      <!--              </indent>-->
+      <!--            </format>-->
+      <!--          </formats>-->
+      <!--          <java>-->
+      <!--            <palantirJavaFormat><version>2.33.0</version></palantirJavaFormat>-->
+      <!--&lt;!&ndash;            <googleJavaFormat>&ndash;&gt;-->
+      <!--&lt;!&ndash;              <reflowLongStrings>true</reflowLongStrings>&ndash;&gt;-->
+      <!--&lt;!&ndash;            </googleJavaFormat>&ndash;&gt;-->
+      <!--          </java>-->
+      <!--        </configuration>-->
+      <!--      </plugin>-->
+    </plugins>
+  </build>
+</project>
