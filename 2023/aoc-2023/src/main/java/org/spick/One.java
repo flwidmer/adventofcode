@@ -13,6 +13,17 @@ import static java.util.function.Function.identity;
 import static java.util.stream.Collectors.reducing;
 
 public class One extends AbstractPuzzle<Integer> {
+
+    public static final Map<String, String> REPLACEMENTS = Map.of("one", "1",
+            "two", "2",
+            "three", "3",
+            "four", "4",
+            "five", "5",
+            "six", "6",
+            "seven", "7",
+            "eight", "8",
+            "nine", "9");
+
     public One(String s) {
         super(s);
     }
@@ -44,23 +55,20 @@ public class One extends AbstractPuzzle<Integer> {
 
 
     public String replacerFunction(String in) {
-        AtomicReference<String> currentString = new AtomicReference<>(in);
-
-        var replacements = Map.of("one", "1",
-                "two", "2",
-                "three", "3",
-                "four", "4",
-                "five", "5",
-                "six", "6",
-                "seven", "7",
-                "eight", "8",
-                "nine", "9");
-        Function<String, String> fun = replacements.entrySet().stream()
+        Function<String, String> fun = REPLACEMENTS.entrySet().stream()
                 .map(this::replace)
                 .reduce(identity(), Function::compose);
         return fun.apply(in);
     }
 
+    /**
+     * pumping lemma FTW. Well kinda, it's not exactly pumping lemma.
+     * This just makes sure eightwone is replaced by both 8, 2 and 1 by realizing that
+     * eightwone -> eightwo2twone is still parseable regardless of the order of encountering
+     * the matches
+     * @param e
+     * @return
+     */
     private Function<String, String> replace(Map.Entry<String, String> e) {
         return s -> s.replaceAll(e.getKey(), e.getKey() + e.getValue() + e.getKey());
     }
