@@ -6,7 +6,8 @@ import org.junit.jupiter.api.Test;
 import java.io.IOException;
 import java.net.URISyntaxException;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.assertj.core.api.Assertions.assertThat;
+
 
 class OneTest {
     @Test
@@ -19,4 +20,13 @@ class OneTest {
         Assertions.assertEquals(new One("one_2.test").second(), 281);
     }
 
+    @Test
+    void shouldReplaceAllNumbers() {
+        var in = "eightwothree";
+        var underTest = new One("");
+        assertThat(underTest.replacerFunction(in))
+                .contains("8")
+                .contains("2")
+                .contains("3");
+    }
 }

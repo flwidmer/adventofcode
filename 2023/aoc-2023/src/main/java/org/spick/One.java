@@ -5,9 +5,14 @@ import java.net.URISyntaxException;
 import java.nio.file.Files;
 import java.util.Map;
 import java.util.concurrent.atomic.AtomicReference;
+import java.util.function.Function;
+import java.util.function.UnaryOperator;
 import java.util.stream.Collectors;
 
-public class One extends AbstractPuzzle {
+import static java.util.function.Function.identity;
+import static java.util.stream.Collectors.reducing;
+
+public class One extends AbstractPuzzle<Integer> {
     public One(String s) {
         super(s);
     }
@@ -22,7 +27,7 @@ public class One extends AbstractPuzzle {
     public Integer first() throws IOException, URISyntaxException {
         return Files.lines(getFilePath())
                 .map(x -> x.replaceAll("[^0-9]", ""))
-                .map(x -> x.substring(0, 1) + x.substring(x.length() - 1))
+                .map(x -> x.charAt(0) + x.substring(x.length() - 1))
                 .mapToInt(Integer::parseInt)
                 .sum();
     }
@@ -30,16 +35,17 @@ public class One extends AbstractPuzzle {
     @Override
     public Integer second() throws IOException, URISyntaxException {
         return Files.lines(getFilePath())
-                .map(x -> replacerFunction(x))
+                .map(this::replacerFunction)
                 .map(x -> x.replaceAll("[^0-9]", ""))
-                .map(x -> x.substring(0, 1) + x.substring(x.length() - 1))
+                .map(x -> x.charAt(0) + x.substring(x.length() - 1))
                 .mapToInt(Integer::parseInt)
                 .sum();
     }
 
 
-    private String replacerFunction(String in) {
+    public String replacerFunction(String in) {
         AtomicReference<String> currentString = new AtomicReference<>(in);
+
         var replacements = Map.of("one", "1",
                 "two", "2",
                 "three", "3",
@@ -49,10 +55,13 @@ public class One extends AbstractPuzzle {
                 "seven", "7",
                 "eight", "8",
                 "nine", "9");
-        replacements.entrySet()
-                .forEach(e -> {
-                    currentString.set(currentString.get().replaceAll(e.getKey(), e.getKey() + e.getValue() + e.getKey()));
-                });
-        return currentString.get();
+        Function<String, String> fun = replacements.entrySet().stream()
+                .map(this::replace)
+                .reduce(identity(), Function::compose);
+        return fun.apply(in);
+    }
+
+    private Function<String, String> replace(Map.Entry<String, String> e) {
+        return s -> s.replaceAll(e.getKey(), e.getKey() + e.getValue() + e.getKey());
     }
 }
