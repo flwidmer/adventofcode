@@ -1,8 +1,5 @@
 package org.spick;
 
-import java.io.IOException;
-import java.net.URISyntaxException;
-import java.nio.file.Files;
 import java.util.Map;
 import java.util.function.Function;
 
@@ -10,7 +7,8 @@ import static java.util.function.Function.identity;
 
 public class One extends AbstractPuzzle<Integer> {
 
-    public static final Map<String, String> REPLACEMENTS = Map.of("one", "1",
+    public static final Map<String, String> REPLACEMENTS = Map.of(
+            "one", "1",
             "two", "2",
             "three", "3",
             "four", "4",
@@ -24,15 +22,15 @@ public class One extends AbstractPuzzle<Integer> {
         super(s);
     }
 
-    public static void main(String[] args) throws IOException, URISyntaxException {
+    public static void main(String[] args) {
         var puzzle = new One("one.input");
         System.out.println(puzzle.first());
         System.out.println(puzzle.second());
     }
 
     @Override
-    public Integer first() throws IOException, URISyntaxException {
-        return Files.lines(getFilePath())
+    public Integer first() {
+        return streamLines()
                 .map(x -> x.replaceAll("[^0-9]", ""))
                 .map(x -> x.charAt(0) + x.substring(x.length() - 1))
                 .mapToInt(Integer::parseInt)
@@ -40,8 +38,8 @@ public class One extends AbstractPuzzle<Integer> {
     }
 
     @Override
-    public Integer second() throws IOException, URISyntaxException {
-        return Files.lines(getFilePath())
+    public Integer second() {
+        return streamLines()
                 .map(replacerFunction())
                 .map(x -> x.replaceAll("[^0-9]", ""))
                 .map(x -> x.charAt(0) + x.substring(x.length() - 1))
