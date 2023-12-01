@@ -46,7 +46,7 @@ public class One extends AbstractPuzzle<Integer> {
     @Override
     public Integer second() throws IOException, URISyntaxException {
         return Files.lines(getFilePath())
-                .map(this::replacerFunction)
+                .map(replacerFunction())
                 .map(x -> x.replaceAll("[^0-9]", ""))
                 .map(x -> x.charAt(0) + x.substring(x.length() - 1))
                 .mapToInt(Integer::parseInt)
@@ -54,11 +54,10 @@ public class One extends AbstractPuzzle<Integer> {
     }
 
 
-    public String replacerFunction(String in) {
-        Function<String, String> fun = REPLACEMENTS.entrySet().stream()
+    public Function<String, String> replacerFunction() {
+        return REPLACEMENTS.entrySet().stream()
                 .map(this::replace)
                 .reduce(identity(), Function::compose);
-        return fun.apply(in);
     }
 
     /**
@@ -66,6 +65,7 @@ public class One extends AbstractPuzzle<Integer> {
      * This just makes sure eightwone is replaced by both 8, 2 and 1 by realizing that
      * eightwone -> eightwo2twone is still parseable regardless of the order of encountering
      * the matches
+     *
      * @param e
      * @return
      */

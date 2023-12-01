@@ -24,7 +24,7 @@ class OneTest {
     void shouldReplaceAllNumbers() {
         var in = "eightwothree";
         var underTest = new One("");
-        assertThat(underTest.replacerFunction(in))
+        assertThat(underTest.replacerFunction().apply(in))
                 .contains("8")
                 .contains("2")
                 .contains("3");
