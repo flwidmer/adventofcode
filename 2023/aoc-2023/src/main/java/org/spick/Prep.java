@@ -2,8 +2,6 @@ package org.spick;
 
 import java.io.IOException;
 import java.net.URISyntaxException;
-import java.nio.file.Files;
-import java.util.stream.Collectors;
 
 public class Prep extends AbstractPuzzle<Integer> {
 
@@ -18,12 +16,12 @@ public class Prep extends AbstractPuzzle<Integer> {
     }
 
     @Override
-    public Integer first() throws IOException, URISyntaxException {
+    public Integer first() {
         return null;
     }
 
     @Override
-    public Integer second() throws IOException, URISyntaxException {
+    public Integer second() {
         return null;
     }
 }

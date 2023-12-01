@@ -11,7 +11,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 class OneTest {
     @Test
-    void shouldReturnTestResultOne() throws IOException, URISyntaxException {
+    void shouldReturnTestResultOne() {
         Assertions.assertEquals(new One("one.test").first(), 142);
     }
 
