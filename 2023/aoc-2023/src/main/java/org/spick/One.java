@@ -4,13 +4,9 @@ import java.io.IOException;
 import java.net.URISyntaxException;
 import java.nio.file.Files;
 import java.util.Map;
-import java.util.concurrent.atomic.AtomicReference;
 import java.util.function.Function;
-import java.util.function.UnaryOperator;
-import java.util.stream.Collectors;
 
 import static java.util.function.Function.identity;
-import static java.util.stream.Collectors.reducing;
 
 public class One extends AbstractPuzzle<Integer> {
 
