@@ -1,6 +1,5 @@
 package org.spick;
 
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.regex.Matcher;
@@ -8,7 +7,15 @@ import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+import static org.spick.utils.StreamUtils.collectEntriesIntoMap;
+
 public class Two extends AbstractPuzzle<Integer> {
+
+    private static final Map<String, Integer> COLORS = Map.of(
+            "red", 12,
+            "green", 13,
+            "blue", 14
+    );
 
     public Two(String s) {
         super(s);
@@ -24,7 +31,7 @@ public class Two extends AbstractPuzzle<Integer> {
     public Integer first() {
         return streamLines()
                 .map(this::parseGame)
-                .map(this::findMaxima)
+                .map(Game::findMaxima)
                 .filter(this::filterConditionFirst)
                 .mapToInt(Maxima::id)
                 .sum();
@@ -34,7 +41,7 @@ public class Two extends AbstractPuzzle<Integer> {
     public Integer second() {
         return streamLines()
                 .map(this::parseGame)
-                .map(this::findMaxima)
+                .map(Game::findMaxima)
                 .mapToInt(Maxima::power)
                 .sum();
     }
@@ -57,23 +64,30 @@ public class Two extends AbstractPuzzle<Integer> {
         return new Game(gameId, colorList);
     }
 
-    private Maxima findMaxima(Game fullGame) {
-        var result = new HashMap<String, Integer>();
-        for (Color c : fullGame.colors) {
-            result.computeIfPresent(c.name, (key, old) -> old < c.amount() ? Integer.valueOf(c.amount()) : old);
-            result.computeIfAbsent(c.name(), k -> c.amount());
-        }
-        return new Maxima(fullGame.id(), result);
-    }
-
     private boolean filterConditionFirst(Maxima maxima) {
-        var red = maxima.colors().get("red") <= 12;
-        var green = maxima.colors().get("green") <= 13;
-        var blue = maxima.colors().get("blue") <= 14;
-        return red && green && blue;
+        return COLORS.entrySet().stream()
+                .map(e -> maxima.colors().get(e.getKey()) <= e.getValue())
+                .reduce(true, (l, r) -> l && r);
     }
 
     public record Game(int id, List<Color> colors) {
+
+        public Maxima findMaxima() {
+            var maxima = colors().stream()
+                    .map(Color::name)
+                    // use grouping collector or something
+                    .map(color -> Map.entry(color, findMaxForColor(color)))
+                    .collect(collectEntriesIntoMap());
+            return new Maxima(id(), maxima);
+        }
+
+        private int findMaxForColor(String color) {
+            return colors().stream()
+                    .filter(c -> c.name().equals(color))
+                    .mapToInt(Color::amount)
+                    .max()
+                    .orElse(0);
+        }
     }
 
     public record Maxima(int id, Map<String, Integer> colors) {
