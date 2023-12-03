@@ -30,13 +30,13 @@ class ThreeTest {
     @Test
     void shouldBeWithin() {
         var range = new Three.NumberRange(4, 7);
-        assertThat(range.touches(3)).isTrue();
-        assertThat(range.touches(4)).isTrue();
-        assertThat(range.touches(5)).isTrue();
-        assertThat(range.touches(6)).isTrue();
-        assertThat(range.touches(7)).isTrue();
-        assertThat(range.touches(8)).isTrue();
-        assertThat(range.touches(2)).isFalse();
-        assertThat(range.touches(9)).isFalse();
+        assertThat(range.touches(new Three.SymbolPosition(3, 'u'))).isTrue();
+        assertThat(range.touches(new Three.SymbolPosition(4, 'u'))).isTrue();
+        assertThat(range.touches(new Three.SymbolPosition(5, 'u'))).isTrue();
+        assertThat(range.touches(new Three.SymbolPosition(6, 'u'))).isTrue();
+        assertThat(range.touches(new Three.SymbolPosition(7, 'u'))).isTrue();
+        assertThat(range.touches(new Three.SymbolPosition(8, 'u'))).isTrue();
+        assertThat(range.touches(new Three.SymbolPosition(2, 'u'))).isFalse();
+        assertThat(range.touches(new Three.SymbolPosition(9, 'u'))).isFalse();
     }
 }
