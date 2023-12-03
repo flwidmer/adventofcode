@@ -8,8 +8,6 @@ import java.util.stream.Stream;
 
 public class Three extends AbstractPuzzle<Integer> {
 
-    private boolean debug = false;
-
     public Three(String s) {
         super(s);
     }
