@@ -86,12 +86,11 @@ public class Seven extends AbstractPuzzle<Long> {
         if (jCount == 0) {
             return hand;
         }
-        final var jCountTotal = getjCount(hand);
         return switch (hand) {
             case FiveOfAKind s -> s;
             case FourOfAKind s -> new FiveOfAKind(s.raw, s.value);
             case ThreeOfAKind s -> {
-                if (jCountTotal == 3) {
+                if (getjCount(hand) == 3) {
                     // Special case if the triple is the jack, all we can do is go to Four
                     yield new FourOfAKind(s.raw, s.value);
                 } else {
@@ -100,16 +99,14 @@ public class Seven extends AbstractPuzzle<Long> {
             }
             case FullHouse s -> new FiveOfAKind(s.raw, s.value);
             case TwoPair s -> {
-                if (jCountTotal == 2) {
+                if (getjCount(hand) == 2) {
                     yield new FourOfAKind(s.raw, s.value);
-                } else if (jCountTotal == 1) {
-                    yield new FullHouse(s.raw(), s.value());
                 } else {
-                    throw new RuntimeException("panic4!");
+                    yield new FullHouse(s.raw(), s.value());
                 }
             }
             case OnePair s -> {
-                if (jCountTotal == 2) {
+                if (getjCount(hand) == 2) {
                     yield new ThreeOfAKind(s.raw, s.value);
                 } else {
                     yield promote(new ThreeOfAKind(s.raw, s.value), --jCount);
