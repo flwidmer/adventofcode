@@ -3,7 +3,6 @@ package org.spick;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.IntStream;
 import java.util.stream.Stream;
 
 public class Three extends AbstractPuzzle<Integer> {
@@ -20,10 +19,7 @@ public class Three extends AbstractPuzzle<Integer> {
 
     @Override
     public Integer first() {
-        var lines = streamLines().toList();
-        // for each line, find number ranges
-        var parsedLines = IntStream.range(0, lines.size())
-                .mapToObj(i -> new Line(i, lines.get(i))) // candidate for util
+        var parsedLines = streamLines()
                 .map(this::parseLine)
                 .toList();
         var sum = 0;
@@ -48,11 +44,7 @@ public class Three extends AbstractPuzzle<Integer> {
 
     @Override
     public Integer second() {
-        var lines = streamLines().toList();
-
-        // for each line, find number ranges
-        var parsedLines = IntStream.range(0, lines.size())
-                .mapToObj(i -> new Line(i, lines.get(i))) // candidate for util
+        var parsedLines = streamLines()
                 .map(this::parseLine)
                 .toList();
         var sum = 0;
@@ -80,8 +72,7 @@ public class Three extends AbstractPuzzle<Integer> {
         return sum;
     }
 
-    private ParsedLine parseLine(Line in) {
-        var line = in.line();
+    private ParsedLine parseLine(String line) {
         var regions = new ArrayList<NumberRange>();
         var symbols = new ArrayList<SymbolPosition>();
         var matching = false;
@@ -103,7 +94,7 @@ public class Three extends AbstractPuzzle<Integer> {
         if (matching) {
             regions.add(new NumberRange(currentBegin, line.length() - 1));
         }
-        return new ParsedLine(in.number(), in.line(), regions, symbols);
+        return new ParsedLine(line, regions, symbols);
     }
 
     private boolean isDigit(char c) {
@@ -120,15 +111,12 @@ public class Three extends AbstractPuzzle<Integer> {
 
     private Stream<Integer> getNumberAdjacentTo(SymbolPosition gear, ParsedLine p) {
         return p.ranges().stream()
-                .filter(r -> r instanceof NumberRange)
+                .filter(r -> r != null)
                 .filter(r -> r.touches(gear))
                 .map(r -> getNumber(p, r));
     }
 
-    public record Line(int number, String line) {
-    }
-
-    public record ParsedLine(int number, String line, List<NumberRange> ranges, List<SymbolPosition> symbolPositions) {
+    public record ParsedLine(String line, List<NumberRange> ranges, List<SymbolPosition> symbolPositions) {
 
     }
 
