@@ -12,12 +12,12 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 class SevenTest {
     @Test
     void shouldReturnTestResultOne() {
-        assertEquals(new Seven("seven.input").first(), 6440L);
+        assertEquals(new Seven("seven.test").first(), 6440L);
     }
 
     @Test
     void shouldReturnTestResultTwo() {
-        assertEquals(new Seven("seven.input").second(), 5905L);
+        assertEquals(new Seven("seven.test").second(), 5905L);
     }
 
     @Test

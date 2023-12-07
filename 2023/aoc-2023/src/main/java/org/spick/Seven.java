@@ -31,11 +31,12 @@ public class Seven extends AbstractPuzzle<Long> {
         System.out.println(puzzle.second());
     }
 
+    // 250370104
     @Override
     public Long first() {
         var orderedHands = streamLines()
                 .map(this::parseHandFirst)
-                .sorted(handComparator())
+                .sorted(handComparator(cardOrderFirst))
                 .toList();
         var counter = new AtomicInteger(orderedHands.size());
         return orderedHands.stream()
@@ -44,11 +45,12 @@ public class Seven extends AbstractPuzzle<Long> {
                 .sum();
     }
 
+    // 251735672
     @Override
     public Long second() {
         var orderedHands = streamLines()
                 .map(this::parseHandSecond)
-                .sorted(handComparator())
+                .sorted(handComparator(cardOrderSecond))
                 .toList();
         var counter = new AtomicInteger(orderedHands.size());
         return orderedHands.stream()
@@ -61,125 +63,143 @@ public class Seven extends AbstractPuzzle<Long> {
         var space = line.split(" ");
         var value = Integer.parseInt(space[1]);
         var cards = Arrays.asList(space[0].split(""));
-        var differentCards = cards.stream()
-                .distinct()
-                .count();
-        var groups = cards.stream().collect(Collectors.groupingBy(Function.identity()));
-        var labelEntry = groups.entrySet().stream()
-                .max(groupLengthComparator().reversed()).get();
-        var label = labelEntry.getKey();
-        var labelGroupSize = labelEntry.getValue().size();
-        return switch ((int) differentCards) {
-            case 1 -> new FiveOfAKind(cards, label, value);
-            case 2 -> {
-                if (labelGroupSize == 4) {
-                    yield new FourOfAKind(cards, label, value);
-                } else if (labelGroupSize == 3) {
-                    yield new FullHouse(cards, label, value);
-                } else {
-                    throw new RuntimeException("panic!");
-                }
-            }
-            case 3 -> {
-                if (labelGroupSize == 3) {
-                    yield new ThreeOfAKind(cards, label, value);
-                } else if (labelGroupSize == 2) {
-                    yield new TwoPair(cards, label, value);
-                } else {
-                    throw new RuntimeException("panic2!");
-                }
-            }
-            case 4 -> new OnePair(cards, label, value);
-            default -> new HighCard(cards, label, value);
-        };
+        return mapToParsedCard(cards, value);
     }
 
     private Hand parseHandSecond(String line) {
         var space = line.split(" ");
         var value = Integer.parseInt(space[1]);
         var cards = Arrays.asList(space[0].split(""));
-        var differentCards = cards.stream()
-                .distinct()
+        var firstMapping = mapToParsedCard(cards, value);
+        var jCount = getjCount(firstMapping);
+        return promote(firstMapping, jCount);
+    }
+
+    private static long getjCount(Hand hand) {
+        var jCount = hand.raw().stream()
+                .filter(s -> s.equals("J"))
                 .count();
-        var groups = cards.stream().collect(Collectors.groupingBy(Function.identity()));
-        var labelEntry = groups.entrySet().stream()
-                .max(groupLengthComparator().reversed()).get();
-        var label = labelEntry.getKey();
-        var labelGroupSize = labelEntry.getValue().size();
-        return switch ((int) differentCards) {
-            case 1 -> new FiveOfAKind(cards, label, value);
-            case 2 -> {
-                if (labelGroupSize == 4) {
-                    yield new FourOfAKind(cards, label, value);
-                } else if (labelGroupSize == 3) {
-                    yield new FullHouse(cards, label, value);
+        return jCount;
+    }
+
+    private Hand promote(Hand hand, long jCount) {
+        if (jCount == 0) {
+            return hand;
+        }
+        final var jCountTotal = getjCount(hand);
+        return switch (hand) {
+            case FiveOfAKind s -> s;
+            case FourOfAKind s -> new FiveOfAKind(s.raw, s.value);
+            case ThreeOfAKind s -> {
+                if (jCountTotal == 3) {
+                    // Special case if the triple is the jack, all we can do is go to Four
+                    yield new FourOfAKind(s.raw, s.value);
                 } else {
-                    throw new RuntimeException("panic!");
+                    yield promote(new FourOfAKind(s.raw, s.value), --jCount);
                 }
             }
-            case 3 -> {
-                if (labelGroupSize == 3) {
-                    yield new ThreeOfAKind(cards, label, value);
-                } else if (labelGroupSize == 2) {
-                    yield new TwoPair(cards, label, value);
+            case FullHouse s -> new FiveOfAKind(s.raw, s.value);
+            case TwoPair s -> {
+                if (jCountTotal == 2) {
+                    yield new FourOfAKind(s.raw, s.value);
+                } else if (jCountTotal == 1) {
+                    yield new FullHouse(s.raw(), s.value());
                 } else {
-                    throw new RuntimeException("panic2!");
+                    throw new RuntimeException("panic4!");
                 }
             }
-            case 4 -> new OnePair(cards, label, value);
-            default -> new HighCard(cards, label, value);
+            case OnePair s -> {
+                if (jCountTotal == 2) {
+                    yield new ThreeOfAKind(s.raw, s.value);
+                } else {
+                    yield promote(new ThreeOfAKind(s.raw, s.value), --jCount);
+                }
+            }
+            case HighCard s -> promote(new OnePair(s.raw, s.value), --jCount);
+            default -> throw new RuntimeException("panic3!");
         };
     }
 
+
     private Comparator<Map.Entry<String, List<String>>> groupLengthComparator() {
-        return Comparator.comparingInt((Map.Entry<String, List<String>> e) -> e.getValue().size()).reversed()
-                .thenComparingInt((Map.Entry<String, List<String>> e) -> e.getValue().stream().map(cardOrderFirst::indexOf).findFirst().get());
+        return Comparator.comparingInt((Map.Entry<String, List<String>> e) -> e.getValue().size());
     }
 
     public Comparator<String> cardOrderComparator() {
         return Comparator.comparing(s -> cardOrderFirst.indexOf(s));
     }
 
-    public Comparator<Hand> handComparator() {
+    public Comparator<Hand> handComparator(final List<String> cardOrder) {
         return Comparator.comparing((Hand h) -> handOrder.get(h.getClass()))
-                .thenComparing(secondaryComparator(0))
-                .thenComparing(secondaryComparator(1))
-                .thenComparing(secondaryComparator(2))
-                .thenComparing(secondaryComparator(3))
-                .thenComparing(secondaryComparator(4));
+                .thenComparing(secondaryComparator(0, cardOrder))
+                .thenComparing(secondaryComparator(1, cardOrder))
+                .thenComparing(secondaryComparator(2, cardOrder))
+                .thenComparing(secondaryComparator(3, cardOrder))
+                .thenComparing(secondaryComparator(4, cardOrder));
     }
 
-    private Function<Hand, Integer> secondaryComparator(final int index) {
-        return h -> cardOrderFirst.indexOf(h.raw().get(index));
+    private Function<Hand, Integer> secondaryComparator(final int index, final List<String> cardOrder) {
+        return h -> cardOrder.indexOf(h.raw().get(index));
+    }
+
+    private Hand mapToParsedCard(List<String> cards, int value) {
+        var differentCards = cards.stream()
+                .distinct()
+                .count();
+        var groups = cards.stream().collect(Collectors.groupingBy(Function.identity()));
+        var labelEntry = groups.entrySet().stream()
+                .max(groupLengthComparator()).get();
+        var labelGroupSize = labelEntry.getValue().size();
+        return switch ((int) differentCards) {
+            case 1 -> new FiveOfAKind(cards, value);
+            case 2 -> {
+                if (labelGroupSize == 4) {
+                    yield new FourOfAKind(cards, value);
+                } else if (labelGroupSize == 3) {
+                    yield new FullHouse(cards, value);
+                } else {
+                    throw new RuntimeException("panic!");
+                }
+            }
+            case 3 -> {
+                if (labelGroupSize == 3) {
+                    yield new ThreeOfAKind(cards, value);
+                } else if (labelGroupSize == 2) {
+                    yield new TwoPair(cards, value);
+                } else {
+                    throw new RuntimeException("panic2!");
+                }
+            }
+            case 4 -> new OnePair(cards, value);
+            default -> new HighCard(cards, value);
+        };
     }
 
     public interface Hand {
         List<String> raw();
 
         int value();
-
-        String label();
     }
 
-    public record FiveOfAKind(List<String> raw, String label, int value) implements Hand {
+    public record FiveOfAKind(List<String> raw, int value) implements Hand {
     }
 
-    public record FourOfAKind(List<String> raw, String label, int value) implements Hand {
+    public record FourOfAKind(List<String> raw, int value) implements Hand {
     }
 
-    public record FullHouse(List<String> raw, String label, int value) implements Hand {
+    public record FullHouse(List<String> raw, int value) implements Hand {
     }
 
-    public record ThreeOfAKind(List<String> raw, String label, int value) implements Hand {
+    public record ThreeOfAKind(List<String> raw, int value) implements Hand {
     }
 
-    public record TwoPair(List<String> raw, String label, int value) implements Hand {
+    public record TwoPair(List<String> raw, int value) implements Hand {
     }
 
-    public record OnePair(List<String> raw, String label, int value) implements Hand {
+    public record OnePair(List<String> raw, int value) implements Hand {
     }
 
-    public record HighCard(List<String> raw, String label, int value) implements Hand {
+    public record HighCard(List<String> raw, int value) implements Hand {
     }
 }
 
