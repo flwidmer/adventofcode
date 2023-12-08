@@ -33,6 +33,7 @@
           <source>21</source>
           <target>21</target>
           <compilerArgs>--enable-preview</compilerArgs>
+          <multiReleaseOutput>false</multiReleaseOutput>
         </configuration>
       </plugin>
       <plugin>
