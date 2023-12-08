@@ -113,7 +113,7 @@ public class Seven extends AbstractPuzzle<Long> {
                 }
             }
             case HighCard s -> promote(new OnePair(s.raw, s.value), --jCount);
-            default -> throw new RuntimeException("panic3!");
+            default -> panic("panic3!");
         };
     }
 
@@ -155,7 +155,7 @@ public class Seven extends AbstractPuzzle<Long> {
                 } else if (labelGroupSize == 3) {
                     yield new FullHouse(cards, value);
                 } else {
-                    throw new RuntimeException("panic!");
+                    yield panic("panic!");
                 }
             }
             case 3 -> {
@@ -164,7 +164,7 @@ public class Seven extends AbstractPuzzle<Long> {
                 } else if (labelGroupSize == 2) {
                     yield new TwoPair(cards, value);
                 } else {
-                    throw new RuntimeException("panic2!");
+                    yield panic("panic2!");
                 }
             }
             case 4 -> new OnePair(cards, value);

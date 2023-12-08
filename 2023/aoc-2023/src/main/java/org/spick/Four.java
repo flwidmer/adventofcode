@@ -1,6 +1,5 @@
 package org.spick;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
@@ -21,29 +20,16 @@ public class Four extends AbstractPuzzle<Integer> {
         System.out.println(puzzle.second());
     }
 
-    /**
-     * Card 1: 41 48 83 86 17 | 83 86  6 31 17  9 48 53
-     * Card 2: 13 32 20 16 61 | 61 30 68 82 17 32 24 19
-     * Card 3:  1 21 53 59 44 | 69 82 63 72 16 21 14  1
-     * Card 4: 41 92 73 84 69 | 59 84 76 51 58  5 54 83
-     * Card 5: 87 83 26 28 32 | 88 30 70 12 93 22 82 36
-     * Card 6: 31 18 13 56 72 | 74 77 10 23 35 67 36 11
-     *
-     * @return
-     */
-
     @Override
     public Integer first() {
         return streamLines().map(this::parseLine)
-                .mapToInt(this::countPoinsFirst)
+                .mapToInt(this::countPointsFirst)
                 .sum();
     }
 
-    private Integer countPoinsFirst(ParsedLine parsedLine) {
+    private Integer countPointsFirst(ParsedLine parsedLine) {
         var count = parsedLine.winnerCount();
-        var points = 1;
-        points = points << count - 1;
-        return points;
+        return 1 << count - 1;
     }
 
     private ParsedLine parseLine(String string) {
@@ -77,27 +63,32 @@ public class Four extends AbstractPuzzle<Integer> {
                 .map(this::parseLine)
                 .collect(Collectors.toMap(ParsedLine::number, Function.identity()));
         var winCounter = 0;
-        var map = new TreeMap<Integer, List<ParsedLine>>();
-        cards.entrySet()
-                .forEach(e -> map.put(e.getKey(), new ArrayList<>(List.of(e.getValue()))));
+        var map = new TreeMap<Integer, Integer>();
+        cards.forEach((key, _) -> map.put(key, 1));
         while (!map.isEmpty()) {
             winCounter++;
-            var pop = pop(map);
+            var pop = cards.get(pop(map));
             var winnerCount = pop.winnerCount();
+            // cache update? as function mabe?
             IntStream.range(0, winnerCount)
                     .map(i -> i + pop.number + 1)
                     .mapToObj(cards::get)
                     .forEach(w -> {
-                        map.get(w.number()).add(w);
+                        changeCounter(w.number(), 1, map);
                     });
         }
         return winCounter;
     }
 
-    private static ParsedLine pop(TreeMap<Integer, List<ParsedLine>> map) {
-        var pop = map.firstEntry().getValue().removeFirst();
+    private static void changeCounter(int key, final int by, TreeMap<Integer, Integer> map) {
+        map.merge(key, by, Integer::sum);
+    }
+
+    private static Integer pop(TreeMap<Integer, Integer> map) {
+        var pop = map.firstEntry().getKey();
+        changeCounter(pop, -1, map);
         // remove if list is empty
-        if (map.firstEntry().getValue().isEmpty()) {
+        if (map.firstEntry().getValue() == 0) {
             map.remove(map.firstKey());
         }
         return pop;

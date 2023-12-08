@@ -28,6 +28,10 @@ public abstract class AbstractPuzzle<RESULT_TYPE> {
     }
   }
 
+  protected static <T> T panic(String s) {
+    throw new RuntimeException(s);
+  }
+
   public abstract RESULT_TYPE second() throws IOException, URISyntaxException;
 
   protected Path getFilePath() throws URISyntaxException {
