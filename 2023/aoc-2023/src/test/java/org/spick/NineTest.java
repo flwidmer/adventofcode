@@ -13,7 +13,7 @@ class NineTest {
 
     @Test
     void shouldReturnTestResultTwo() {
-        assertEquals(new Nine("nine.test").second(), 123);
+        assertEquals(new Nine("nine.test").second(), 2);
     }
 
 }

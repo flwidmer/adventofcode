@@ -4,6 +4,8 @@ package org.spick;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Function;
+import java.util.function.LongBinaryOperator;
+import java.util.function.ToLongFunction;
 import java.util.stream.Stream;
 
 public class Nine extends AbstractPuzzle<Long> {
@@ -17,15 +19,33 @@ public class Nine extends AbstractPuzzle<Long> {
         System.out.println(puzzle.second());
     }
 
+    // 1930746032
     @Override
     public Long first() {
         return streamLines()
                 .map(parseList())
-                .mapToLong(this::recurse)
+                .mapToLong(this::recurseFirst)
                 .sum();
     }
 
-    private Long recurse(List<Long> list) {
+    // 1154
+    @Override
+    public Long second() {
+        return streamLines()
+                .map(parseList())
+                .mapToLong(this::recurseSecond)
+                .sum();
+    }
+
+    private long recurseFirst(List<Long> list) {
+        return recurse(list, List::getLast, Long::sum);
+    }
+
+    private long recurseSecond(List<Long> list) {
+        return recurse(list, List::getFirst, (a, b) -> a - b);
+    }
+
+    private Long recurse(List<Long> list, ToLongFunction<List<Long>> accessor, LongBinaryOperator operation) {
         // End condition: all have the same value
         if (list.stream().distinct().count() == 1) {
             return list.getFirst();
@@ -42,9 +62,7 @@ public class Nine extends AbstractPuzzle<Long> {
             panic("sizes not same");
         }
         // return last element of list + result of recursion
-        var result = list.getLast() + recurse(differences);
-//        System.out.println(result);
-        return result;
+        return operation.applyAsLong(accessor.applyAsLong(list), recurse(differences, accessor, operation));
     }
 
     private Function<String, List<Long>> parseList() {
@@ -52,10 +70,5 @@ public class Nine extends AbstractPuzzle<Long> {
                 .mapToLong(Long::parseLong)
                 .boxed()
                 .toList();
-    }
-
-    @Override
-    public Long second() {
-        return null;
     }
 }
