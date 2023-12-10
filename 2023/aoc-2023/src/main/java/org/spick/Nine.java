@@ -1,12 +1,12 @@
 package org.spick;
 
 
-import java.util.ArrayList;
+import org.spick.utils.SlidingWindow;
+import org.spick.utils.StreamUtils;
+
 import java.util.List;
-import java.util.function.Function;
 import java.util.function.LongBinaryOperator;
 import java.util.function.ToLongFunction;
-import java.util.stream.Stream;
 
 public class Nine extends AbstractPuzzle<Long> {
     public Nine(String s) {
@@ -23,7 +23,7 @@ public class Nine extends AbstractPuzzle<Long> {
     @Override
     public Long first() {
         return streamLines()
-                .map(parseList())
+                .map(StreamUtils::parseListLong)
                 .mapToLong(this::recurseFirst)
                 .sum();
     }
@@ -32,7 +32,7 @@ public class Nine extends AbstractPuzzle<Long> {
     @Override
     public Long second() {
         return streamLines()
-                .map(parseList())
+                .map(StreamUtils::parseListLong)
                 .mapToLong(this::recurseSecond)
                 .sum();
     }
@@ -51,24 +51,13 @@ public class Nine extends AbstractPuzzle<Long> {
             return list.getFirst();
         }
         // otherwise: caluclate differences. Recurse.
-        var left = list.iterator();
-        var right = list.iterator();
-        right.next();
-        var differences = new ArrayList<Long>();
-        while (right.hasNext()) {
-            differences.add(right.next() - left.next());
-        }
+        var differences = SlidingWindow.windowed(list, 2)
+                .map(pair -> pair.reduce(0L, (a, b) -> b - a))
+                .toList();
         if (differences.size() + 1 != list.size()) {
             panic("sizes not same");
         }
         // return last element of list + result of recursion
         return operation.applyAsLong(accessor.applyAsLong(list), recurse(differences, accessor, operation));
-    }
-
-    private Function<String, List<Long>> parseList() {
-        return s -> Stream.of(s.split(" "))
-                .mapToLong(Long::parseLong)
-                .boxed()
-                .toList();
     }
 }
