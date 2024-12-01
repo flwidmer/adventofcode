@@ -1,7 +1,6 @@
 package org.spick.utils;
 
 import java.util.Iterator;
-import java.util.Stack;
 import java.util.function.BiFunction;
 import java.util.stream.Stream;
 import java.util.stream.StreamSupport;
