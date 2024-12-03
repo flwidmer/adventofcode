@@ -19,15 +19,4 @@
 *.iml
 .idea
 
-2024/target/classes/org/spick/AbstractPuzzle.class
-2024/target/classes/org/spick/One.class
-2024/target/classes/org/spick/one.txt
-2024/target/classes/org/spick/One$Line.class
-2024/target/classes/org/spick/utils/MathUtils.class
-2024/target/classes/org/spick/utils/SlidingWindow.class
-2024/target/classes/org/spick/utils/StreamUtils.class
-2024/target/classes/org/spick/utils/Zip.class
-2024/target/classes/org/spick/utils/Zip$1.class
-2024/target/maven-status/maven-compiler-plugin/compile/default-compile/inputFiles.lst
-2024/target/test-classes/org/spick/one.txt
-2024/target/test-classes/org/spick/TestOne.class
+2024/target/**
