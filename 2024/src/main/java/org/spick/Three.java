@@ -6,10 +6,10 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 public class Three extends AbstractPuzzle<Integer> {
+
+    private static Pattern REGEX = Pattern.compile("(do\\(\\))|(don't\\(\\))|(mul\\((\\d{1,3}),(\\d{1,3})\\))");
 
     public Three(String input) {
         super(input);
@@ -23,14 +23,14 @@ public class Three extends AbstractPuzzle<Integer> {
 
     @Override
     public Integer first() throws IOException, URISyntaxException {
-        return new Parser(false, streamLines()).parse().stream()
+        return new Parser(false, readInput()).parse().stream()
                 .mapToInt(a -> a)
                 .sum();
     }
 
     @Override
     public Integer second() throws IOException, URISyntaxException {
-        return new Parser(true, streamLines()).parse().stream()
+        return new Parser(true, readInput()).parse().stream()
                 .mapToInt(a -> a)
                 .sum();
     }
@@ -38,12 +38,11 @@ public class Three extends AbstractPuzzle<Integer> {
     private class Parser {
         private boolean conditional;
         private boolean enabled = true;
-        private Pattern REGEX = Pattern.compile("(do\\(\\))|(don't\\(\\))|(mul\\((\\d{1,3}),(\\d{1,3})\\))");
         private CharSequence input;
 
-        public Parser(boolean conditional, Stream<String> input) {
+        public Parser(boolean conditional, String input) {
             this.conditional = conditional;
-            this.input = input.collect(Collectors.joining());
+            this.input = input;
         }
 
         private Matcher getMatcher() {

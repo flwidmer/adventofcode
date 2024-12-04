@@ -28,6 +28,14 @@ public abstract class AbstractPuzzle<RESULT_TYPE> {
     }
   }
 
+  protected String readInput() {
+    try {
+      return Files.readString(getFilePath());
+    } catch (IOException | URISyntaxException e) {
+      throw new RuntimeException("fumbled the bag", e);
+    }
+  }
+
   protected static <T> T panic(String s) {
     throw new RuntimeException(s);
   }
