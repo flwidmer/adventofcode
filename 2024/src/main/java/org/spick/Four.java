@@ -25,14 +25,14 @@ public class Four extends AbstractPuzzle<Integer> {
         var matrix = getInput();
         var counter = 0;
         var directions = List.of(
-                new Pair<Integer>(-1, -1),
-                new Pair<Integer>(-1, 1),
-                new Pair<Integer>(1, -1),
-                new Pair<Integer>(1, 1),
-                new Pair<Integer>(-1, 0),
-                new Pair<Integer>(0, -1),
-                new Pair<Integer>(1, 0),
-                new Pair<Integer>(0, 1));
+                new Pair<>(-1, -1),
+                new Pair<>(-1, 1),
+                new Pair<>(1, -1),
+                new Pair<>(1, 1),
+                new Pair<>(-1, 0),
+                new Pair<>(0, -1),
+                new Pair<>(1, 0),
+                new Pair<>(0, 1));
         for (int i = 0; i < matrix.size(); i++) {
             for (int k = 0; k < matrix.get(i).size(); k++) {
                 for (var direction : directions) {
@@ -50,10 +50,10 @@ public class Four extends AbstractPuzzle<Integer> {
         var matrix = getInput();
         var counter = 0;
         var directions = List.of(
-                new Pair<Integer>(-1, -1),
-                new Pair<Integer>(-1, 1),
-                new Pair<Integer>(1, -1),
-                new Pair<Integer>(1, 1));
+                new Pair<>(-1, -1),
+                new Pair<>(-1, 1),
+                new Pair<>(1, -1),
+                new Pair<>(1, 1));
         for (int i = 0; i < matrix.size(); i++) {
             for (int k = 0; k < matrix.get(i).size(); k++) {
                 var cross = 0;
@@ -77,7 +77,7 @@ public class Four extends AbstractPuzzle<Integer> {
         return counter;
     }
 
-    private Pair<Integer> invert(Pair<Integer> direction) {
+    private Pair<Integer, Integer> invert(Pair<Integer, Integer> direction) {
         return new Pair<>(direction.getLeft() * -1, direction.getRight() * -1);
     }
 
@@ -90,7 +90,7 @@ public class Four extends AbstractPuzzle<Integer> {
      * @param iterator what we are looking for
      * @return
      */
-    private boolean check(List<List<String>> matrix, int i, int k, Pair<Integer> direction, Iterator<String> iterator) {
+    private boolean check(List<List<String>> matrix, int i, int k, Pair<Integer, Integer> direction, Iterator<String> iterator) {
         if (!isSafeMove(matrix, i, k)) {
             return false;
         }

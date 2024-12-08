@@ -50,9 +50,9 @@ public class Six extends AbstractPuzzle<Integer> {
         return newMap;
     }
 
-    private HashSet<Pair<Integer>> doRun(List<List<String>> map) {
+    private HashSet<Pair<Integer, Integer>> doRun(List<List<String>> map) {
         var currentPosition = startPosition(map);
-        var visitedPositions = new HashSet<Pair<Integer>>();
+        var visitedPositions = new HashSet<Pair<Integer, Integer>>();
         var currentDirection = new Pair<>(-1, 0);
         while (inBounds(currentPosition, map)) {
             visitedPositions.add(currentPosition);
@@ -91,12 +91,12 @@ public class Six extends AbstractPuzzle<Integer> {
         return false;
     }
 
-    private boolean inBounds(Pair<Integer> currentPosition, List<List<String>> map) {
+    private boolean inBounds(Pair<Integer, Integer> currentPosition, List<List<String>> map) {
         return currentPosition.getLeft() >= 0 && currentPosition.getLeft() < map.size()
                 && currentPosition.getRight() >= 0 && currentPosition.getRight() < map.get(0).size();
     }
 
-    private Pair<Integer> startPosition(List<List<String>> map) {
+    private Pair<Integer, Integer> startPosition(List<List<String>> map) {
         for (int i = 0; i < map.size(); i++) {
             for (int k = 0; k < map.size(); k++) {
                 if (map.get(i).get(k).equals("^")) {
@@ -107,20 +107,20 @@ public class Six extends AbstractPuzzle<Integer> {
         return new Pair<>(0, 0);
     }
 
-    private String readPosition(List<List<String>> map, Pair<Integer> toRead) {
+    private String readPosition(List<List<String>> map, Pair<Integer, Integer> toRead) {
         if (!inBounds(toRead, map)) {
             return "X";
         }
         return map.get(toRead.getLeft()).get(toRead.getRight());
     }
 
-    private Pair<Integer> getNextPosition(Pair<Integer> currentPosition, Pair<Integer> currentDirection) {
+    private Pair<Integer, Integer> getNextPosition(Pair<Integer, Integer> currentPosition, Pair<Integer, Integer> currentDirection) {
         return new Pair<>(currentPosition.getLeft() + currentDirection.getLeft(),
                 currentPosition.getRight() + currentDirection.getRight());
     }
 
-    private Pair<Integer> rotateRight(Pair<Integer> currentDirection) {
-        return new Pair<Integer>(currentDirection.getRight(), currentDirection.getLeft() * -1);
+    private Pair<Integer, Integer> rotateRight(Pair<Integer, Integer> currentDirection) {
+        return new Pair<Integer, Integer>(currentDirection.getRight(), currentDirection.getLeft() * -1);
     }
 
     private List<List<String>> getMap() {

@@ -1,19 +1,26 @@
 package org.spick.utils;
 
-public class Pair<T> {
+import java.util.function.Function;
+
+public class Pair<L,R> {
     
-    private T left;
-    private T right;
-    public Pair(T left, T right) {
+    private L left;
+    private R right;
+    public Pair(L left, R right) {
         this.left = left;
         this.right = right;
     }
-    public T getLeft() {
+    public L getLeft() {
         return left;
     }
-    public T getRight() {
+    public R getRight() {
         return right;
     }
+
+    public <RR> Pair<L, RR> mapRight(Function<R, RR> func) {
+        return new Pair<>(left,  func.apply(right));
+    }
+
     @Override
     public int hashCode() {
         final int prime = 31;
@@ -30,7 +37,7 @@ public class Pair<T> {
             return false;
         if (getClass() != obj.getClass())
             return false;
-        Pair<?> other = (Pair<?>) obj;
+        Pair<?, ?> other = (Pair<?, ?>) obj;
         if (left == null) {
             if (other.left != null)
                 return false;
