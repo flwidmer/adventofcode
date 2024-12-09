@@ -1,7 +1,5 @@
 package org.spick;
 
-import java.io.IOException;
-import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -9,18 +7,23 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 public class Eight extends AbstractPuzzle<Integer> {
+    
     public Eight(String input) {
         super(input);
     }
 
-    public static void main(String[] args) throws IOException, URISyntaxException {
-        var puzzle = new Eight("eight.txt");
+    public Eight() {
+        super(8);
+    }
+
+    public static void main(String[] args)  {
+        var puzzle = new Eight();
         System.out.println(puzzle.first());
         System.out.println(puzzle.second());
     }
 
     @Override
-    public Integer first() throws IOException, URISyntaxException {
+    public Integer first()  {
         var cityMap = getInput();
         var result = new HashSet<Position>();
         for (var antennas : cityMap.getFrequencyIndex().values()) {
@@ -44,7 +47,7 @@ public class Eight extends AbstractPuzzle<Integer> {
     }
 
     @Override
-    public Integer second() throws IOException, URISyntaxException {
+    public Integer second() {
         var cityMap = getInput();
         var result = new HashSet<Position>();
         for (var antennas : cityMap.getFrequencyIndex().values()) {

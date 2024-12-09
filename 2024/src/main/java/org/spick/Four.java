@@ -1,7 +1,5 @@
 package org.spick;
 
-import java.io.IOException;
-import java.net.URISyntaxException;
 import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
@@ -14,14 +12,14 @@ public class Four extends AbstractPuzzle<Integer> {
         super(input);
     }
 
-    public static void main(String[] args) throws IOException, URISyntaxException {
+    public static void main(String[] args) {
         Four four = new Four("four.txt");
         System.out.println(four.first());
         System.out.println(four.second());
     }
 
     @Override
-    public Integer first() throws IOException, URISyntaxException {
+    public Integer first() {
         var matrix = getInput();
         var counter = 0;
         var directions = List.of(
@@ -46,7 +44,7 @@ public class Four extends AbstractPuzzle<Integer> {
     }
 
     @Override
-    public Integer second() throws IOException, URISyntaxException {
+    public Integer second() {
         var matrix = getInput();
         var counter = 0;
         var directions = List.of(
@@ -83,14 +81,16 @@ public class Four extends AbstractPuzzle<Integer> {
 
     /**
      * recursively check the matrix
-     * @param matrix the matrix
-     * @param i x position
-     * @param k y position
+     * 
+     * @param matrix    the matrix
+     * @param i         x position
+     * @param k         y position
      * @param direction offsets added to position
-     * @param iterator what we are looking for
+     * @param iterator  what we are looking for
      * @return
      */
-    private boolean check(List<List<String>> matrix, int i, int k, Pair<Integer, Integer> direction, Iterator<String> iterator) {
+    private boolean check(List<List<String>> matrix, int i, int k, Pair<Integer, Integer> direction,
+            Iterator<String> iterator) {
         if (!isSafeMove(matrix, i, k)) {
             return false;
         }

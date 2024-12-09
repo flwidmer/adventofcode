@@ -1,7 +1,5 @@
 package org.spick;
 
-import java.io.IOException;
-import java.net.URISyntaxException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.stream.Stream;
@@ -14,14 +12,14 @@ public class One extends AbstractPuzzle<Integer> {
         super(in);
     }
 
-    public static void main(String[] args) throws IOException, URISyntaxException {
+    public static void main(String[] args) {
         One one = new One("one.txt");
         System.out.println(one.first());
         System.out.println(one.second());
     }
 
     @Override
-    public Integer first() throws IOException, URISyntaxException {
+    public Integer first() {
         Stream.Builder<Integer> left = Stream.builder();
         Stream.Builder<Integer> right = Stream.builder();
         getInput().forEach(l -> {
@@ -35,7 +33,7 @@ public class One extends AbstractPuzzle<Integer> {
     }
 
     @Override
-    public Integer second() throws IOException, URISyntaxException {
+    public Integer second() {
         Stream.Builder<Integer> left = Stream.builder();
         var right = new HashMap<Integer, Integer>();
         getInput().forEach(l -> {

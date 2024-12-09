@@ -1,7 +1,5 @@
 package org.spick;
 
-import java.io.IOException;
-import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
@@ -17,14 +15,14 @@ public class Two extends AbstractPuzzle<Long> {
         super(input);
     }
 
-    public static void main(String[] args) throws IOException, URISyntaxException {
+    public static void main(String[] args) {
         Two two = new Two("two.txt");
         System.out.println(two.first());
         System.out.println(two.second());
     }
 
     @Override
-    public Long first() throws IOException, URISyntaxException {
+    public Long first() {
         return getInput().map(report -> {
             return isSafe(report);
         })
@@ -33,7 +31,7 @@ public class Two extends AbstractPuzzle<Long> {
     }
 
     @Override
-    public Long second() throws IOException, URISyntaxException {
+    public Long second() {
         return getInput().map(report -> {
             if (isSafe(report)) {
                 return true;

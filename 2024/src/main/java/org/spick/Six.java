@@ -1,7 +1,5 @@
 package org.spick;
 
-import java.io.IOException;
-import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashSet;
@@ -15,24 +13,24 @@ public class Six extends AbstractPuzzle<Integer> {
         super(string);
     }
 
-    public static void main(String[] args) throws IOException, URISyntaxException {
+    public static void main(String[] args) {
         Six six = new Six("six.txt");
         System.out.println(six.first());
         System.out.println(six.second());
     }
 
     @Override
-    public Integer first() throws IOException, URISyntaxException {
+    public Integer first() {
         var map = getMap();
         return doRun(map).size();
     }
 
     @Override
-    public Integer second() throws IOException, URISyntaxException {
+    public Integer second() {
         var map = getMap();
         var counter = 0;
         var guardPath = doRun(map);
-        for(var position : guardPath) {
+        for (var position : guardPath) {
             var newMap = makeObstacle(map, position.getLeft(), position.getRight());
             if (loopDetect(newMap)) {
                 counter++;
@@ -81,7 +79,7 @@ public class Six extends AbstractPuzzle<Integer> {
             while (readPosition(map, nextPosition).equals("#")) {
                 currentDirection = rotateRight(currentDirection);
                 rotations++;
-                if(rotations > 4) {
+                if (rotations > 4) {
                     return true;
                 }
                 nextPosition = getNextPosition(currentPosition, currentDirection);
@@ -114,7 +112,8 @@ public class Six extends AbstractPuzzle<Integer> {
         return map.get(toRead.getLeft()).get(toRead.getRight());
     }
 
-    private Pair<Integer, Integer> getNextPosition(Pair<Integer, Integer> currentPosition, Pair<Integer, Integer> currentDirection) {
+    private Pair<Integer, Integer> getNextPosition(Pair<Integer, Integer> currentPosition,
+            Pair<Integer, Integer> currentDirection) {
         return new Pair<>(currentPosition.getLeft() + currentDirection.getLeft(),
                 currentPosition.getRight() + currentDirection.getRight());
     }

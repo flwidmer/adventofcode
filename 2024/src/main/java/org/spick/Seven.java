@@ -1,7 +1,5 @@
 package org.spick;
 
-import java.io.IOException;
-import java.net.URISyntaxException;
 import java.util.Arrays;
 import java.util.List;
 import java.util.function.LongBinaryOperator;
@@ -19,23 +17,23 @@ public class Seven extends AbstractPuzzle<Long> {
         super(input);
     }
 
-    public static void main(String[] args) throws IOException, URISyntaxException {
+    public static void main(String[] args) {
         var puzzle = new Seven("seven.txt");
         System.out.println(puzzle.first());
         System.out.println(puzzle.second());
     }
 
     @Override
-    public Long first() throws IOException, URISyntaxException {
+    public Long first() {
         return getInput()
-        .mapToLong(line -> check(line, List.of(PLUS, MULTIPLY)))
+                .mapToLong(line -> check(line, List.of(PLUS, MULTIPLY)))
                 .sum();
     }
 
     @Override
-    public Long second() throws IOException, URISyntaxException {
+    public Long second() {
         return getInput()
-        .mapToLong(line -> check(line, List.of(PLUS, MULTIPLY, CONCAT)))
+                .mapToLong(line -> check(line, List.of(PLUS, MULTIPLY, CONCAT)))
                 .sum();
     }
 

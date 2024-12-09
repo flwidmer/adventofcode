@@ -1,7 +1,5 @@
 package org.spick;
 
-import java.io.IOException;
-import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Matcher;
@@ -15,21 +13,21 @@ public class Three extends AbstractPuzzle<Integer> {
         super(input);
     }
 
-    public static void main(String[] args) throws IOException, URISyntaxException {
+    public static void main(String[] args) {
         Three three = new Three("three.txt");
         System.out.println(three.first());
         System.out.println(three.second());
     }
 
     @Override
-    public Integer first() throws IOException, URISyntaxException {
+    public Integer first() {
         return new Parser(false, readInput()).parse().stream()
                 .mapToInt(a -> a)
                 .sum();
     }
 
     @Override
-    public Integer second() throws IOException, URISyntaxException {
+    public Integer second() {
         return new Parser(true, readInput()).parse().stream()
                 .mapToInt(a -> a)
                 .sum();

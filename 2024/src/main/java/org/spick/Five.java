@@ -1,8 +1,5 @@
 package org.spick;
 
-import java.io.IOException;
-import java.net.URISyntaxException;
-import java.security.KeyStore.Entry;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -18,14 +15,14 @@ public class Five extends AbstractPuzzle<Integer> {
         super(input);
     }
 
-    public static void main(String[] args) throws IOException, URISyntaxException {
+    public static void main(String[] args) {
         Five five = new Five("five.txt");
         System.out.println(five.first());
         System.out.println(five.second());
     }
 
     @Override
-    public Integer first() throws IOException, URISyntaxException {
+    public Integer first() {
         var result = 0;
         var rulesBackward = getRulesBackward();
         for (var manual : getManuals()) {
@@ -37,7 +34,7 @@ public class Five extends AbstractPuzzle<Integer> {
     }
 
     @Override
-    public Integer second() throws IOException, URISyntaxException {
+    public Integer second() {
         var result = 0;
         var rulesBackward = getRulesBackward();
         var rulesForward = getRulesForward();
@@ -52,7 +49,7 @@ public class Five extends AbstractPuzzle<Integer> {
 
     private List<Integer> fix(List<Integer> manual, Map<Integer, Set<Integer>> rulesForward) {
         var precedingPages = new ArrayList<Integer>();
-        for (var i = 0; i <  manual.size(); i++) {
+        for (var i = 0; i < manual.size(); i++) {
             var page = manual.get(i);
             if (!rulesForward.containsKey(page)) {
                 precedingPages.add(page);
@@ -60,16 +57,16 @@ public class Five extends AbstractPuzzle<Integer> {
             }
             var lowestIndex = manual.size();
             for (var rule : rulesForward.get(page)) {
-                if(precedingPages.isEmpty()) {
+                if (precedingPages.isEmpty()) {
                     break;
-                } else if(precedingPages.contains(rule)){
+                } else if (precedingPages.contains(rule)) {
                     var indexOfRule = precedingPages.indexOf(rule);
-                    if(indexOfRule < lowestIndex && indexOfRule != -1) {
+                    if (indexOfRule < lowestIndex && indexOfRule != -1) {
                         lowestIndex = indexOfRule;
                     }
                 }
             }
-            if(lowestIndex != manual.size()) {
+            if (lowestIndex != manual.size()) {
                 precedingPages.add(lowestIndex, page);
             } else {
                 precedingPages.add(page);

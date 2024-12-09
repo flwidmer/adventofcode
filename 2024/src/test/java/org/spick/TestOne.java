@@ -1,8 +1,5 @@
 package org.spick;
 
-import java.io.IOException;
-import java.net.URISyntaxException;
-
 import org.assertj.core.api.Assertions;
 
 import org.junit.jupiter.api.BeforeEach;
@@ -16,13 +13,13 @@ public class TestOne {
         underTest = new One("one.txt");
     }
 
-    @Test 
-    public void testFirst() throws IOException, URISyntaxException {
+    @Test
+    public void testFirst() {
         Assertions.assertThat(underTest.first()).isEqualTo(11);
     }
 
-    @Test 
-    public void testSecond() throws IOException, URISyntaxException {
+    @Test
+    public void testSecond() {
         Assertions.assertThat(underTest.second()).isEqualTo(31);
     }
 }
